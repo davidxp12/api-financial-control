@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+    <AssemblyName>ProductCatalogue.Persistence</AssemblyName>
+    <RootNamespace>ProductCatalogue.Persistence</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Ardalis.GuardClauses" Version="3.2.0" />
+    <PackageReference Include="AWSSDK.DynamoDBv2" Version="3.7.405.13" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FinancialControl.Domain\FinancialControl.Domain.csproj" />
+  </ItemGroup>
+
+</Project>
