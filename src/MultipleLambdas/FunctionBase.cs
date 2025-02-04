@@ -1,4 +1,5 @@
 ﻿using System;
+using FinancialControl.Domain.Queue;
 using LambdaLogger;
 using LambdaLogger.Setup;
 using MediatR;
@@ -16,6 +17,7 @@ namespace MultipleLambdas
         private readonly ServiceProvider _serviceProvider;
         private readonly Lazy<IMediator> _mediatr;
         private readonly Lazy<ILogger> _logger;
+        public readonly SQSManager _SQSManager;
 		private Guid _CorrelationId { get; set; }
 
 		public FunctionBase()
@@ -28,6 +30,7 @@ namespace MultipleLambdas
             this._mediatr = new Lazy<IMediator>(() => this._serviceProvider.GetRequiredService<IMediator>());
             this._logger = new Lazy<ILogger>(() => this._serviceProvider.GetRequiredService<ILogger>());
 			this._CorrelationId = Guid.Parse(Guid.NewGuid().ToString());
+            this._SQSManager = new SQSManager();
 		}
 
         protected ILogger Logger => this._logger.Value;

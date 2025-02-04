@@ -1,5 +1,6 @@
 ﻿using Amazon;
 using Amazon.SQS;
+using Amazon.SQS.Model;
 using FinancialControl.Domain.BaseTypes;
 using System;
 using System.Collections.Generic;
@@ -40,6 +41,25 @@ namespace FinancialControl.Domain.Queue
 			Console.WriteLine($"SQSManager result {result}");
 
 			return result;
+		}
+
+		public bool DeleteMessage(string _serviceURL, string receiptHandle)
+		{
+			return clientSQS.DeleteMessageAsync(new DeleteMessageRequest
+			{
+				QueueUrl = _serviceURL,
+				ReceiptHandle = receiptHandle
+			}).IsCompletedSuccessfully;
+		}
+
+		public async Task<string> GetQueueUrlAsync(string queueName)
+		{
+			var response = await clientSQS.GetQueueUrlAsync(new GetQueueUrlRequest
+			{
+				QueueName = queueName
+			});
+
+			return response.QueueUrl;
 		}
 	}
 }

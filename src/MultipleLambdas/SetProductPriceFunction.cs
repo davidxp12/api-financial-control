@@ -30,7 +30,7 @@ namespace MultipleLambdas
                 Guard.Against.Null(request, nameof(request));
                 var command = JsonConvert.DeserializeObject<ChangeProductPriceCommand>(request.Body);
 
-                // fire command (tenantId should come from the data passed but this is for testing)
+                
                 command.TenantId = this._tenantId;
                 var cmdResult = await this.Mediator.Send(command);
 

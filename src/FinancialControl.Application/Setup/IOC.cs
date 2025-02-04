@@ -22,7 +22,7 @@ namespace ProductCatalogue.Application.Setup
             services.AddMediatR(Assembly.GetExecutingAssembly())
                 .AddAutoMapper(Assembly.GetExecutingAssembly())
                 .AddPersistenceServices()
-                .AddDatabaseServices();
+                .AddAwsServices();
 
 
 			services.AddTransient<IUnitOfWork, UnitOfWork>();

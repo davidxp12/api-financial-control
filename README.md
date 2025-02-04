@@ -32,7 +32,7 @@ Lambda de Processamento de Transações (lambda-transaction)
 
 Trigger: SQS (sqs-transactions).
 Tarefas:
-Ler a mensagem da fila.
+Ler a mensagem da fila.	
 Validar os dados da transação (exemplo: valor positivo para crédito, negativo para débito).
 Armazenar a transação no DynamoDB (Transactions table).
 Enviar um evento para a fila sqs-consolidation para atualizar o saldo diário.

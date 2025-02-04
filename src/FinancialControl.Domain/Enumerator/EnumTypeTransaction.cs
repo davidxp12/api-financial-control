@@ -12,6 +12,6 @@ namespace FinancialControl.Domain.Enumerator
 		[Description("Debit")]
 		Debit,
 		[Description("Credit")]
-		credit
+		Credit
 	}
 }

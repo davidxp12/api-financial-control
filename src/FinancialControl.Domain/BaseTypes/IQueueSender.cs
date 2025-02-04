@@ -9,5 +9,6 @@ namespace FinancialControl.Domain.BaseTypes
 	public interface IQueueSender
 	{
 		bool Send(string _message, string _serviceURL, string awsAccessKeyId, string awsSecretAccessKey, int _retry);
+		bool DeleteMessage(string _serviceURL, string ReceiptHandle);
 	}
 }
