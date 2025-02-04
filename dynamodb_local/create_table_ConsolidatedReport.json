@@ -1,0 +1,29 @@
+{
+    "TableName": "devConsolidatedReport",
+	 "KeySchema": [
+      { "AttributeName": "Data", "KeyType": "HASH" }
+    ],
+    "AttributeDefinitions": [
+		{
+          "AttributeName": "Data",
+          "AttributeType": "S"
+        },
+        {
+          "AttributeName": "TotalCredits",
+          "AttributeType": "S"
+        },
+        {
+          "AttributeName": "TotalDebits",
+          "AttributeType": "S"
+        },
+        {
+          "AttributeName": "FinalBalance",
+          "AttributeType": "S"
+        }
+    ],
+    "ProvisionedThroughput": {
+      "ReadCapacityUnits": 5,
+      "WriteCapacityUnits": 5
+    }
+}
+

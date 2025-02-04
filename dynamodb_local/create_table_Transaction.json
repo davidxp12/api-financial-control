@@ -1,0 +1,60 @@
+{
+    "TableName": "devTransaction",
+	 "KeySchema": [
+      { "AttributeName": "TransactionId", "KeyType": "HASH" },
+      { "AttributeName": "Amount", "KeyType": "RANGE" }
+    ],
+    "AttributeDefinitions": [
+		{
+          "AttributeName": "TransactionId",
+          "AttributeType": "S"
+        },
+        {
+          "AttributeName": "Data",
+          "AttributeType": "S"
+        },
+        {
+          "AttributeName": "Type",
+          "AttributeType": "S"
+        },
+        {
+          "AttributeName": "Amount",
+          "AttributeType": "S"
+        },
+		{
+          "AttributeName": "Category",
+          "AttributeType": "S"
+        }
+    ],
+    "ProvisionedThroughput": {
+      "ReadCapacityUnits": 5,
+      "WriteCapacityUnits": 5
+    },
+	"GlobalSecondaryIndexes": [
+        {
+          "IndexName": "index_data",
+          "KeySchema": [
+            {
+              "AttributeName": "TransactionId",
+              "KeyType": "HASH"
+            },
+            {
+              "AttributeName": "Data",
+              "KeyType": "RANGE"
+            }
+          ],
+          "Projection": {
+            "NonKeyAttributes": [
+              "Data"
+            ],
+            "ProjectionType": "INCLUDE"
+          },
+          "ProvisionedThroughput": {
+            "ReadCapacityUnits": 5,
+            "WriteCapacityUnits": 5
+          }
+        }
+        }
+      ]
+}
+
