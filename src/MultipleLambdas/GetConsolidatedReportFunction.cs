@@ -4,7 +4,6 @@ using Ardalis.GuardClauses;
 using FinancialControl.Application.Dtos;
 using FinancialControl.Application.Queries;
 using Newtonsoft.Json;
-using ProductCatalogue.Application.Queries;
 using System;
 using System.Collections.Generic;
 using System.Linq;

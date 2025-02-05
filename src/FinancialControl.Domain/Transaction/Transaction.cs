@@ -1,15 +1,13 @@
 ﻿using Amazon.DynamoDBv2.DataModel;
 using FinancialControl.Domain.Enumerator;
 using ProductCatalogue.Domain.BaseTypes;
-using ProductCatalogue.Domain.Products.Events;
-using ProductCatalogue.Domain.Products;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using FinancialControl.Domain.Products.Events;
 using Amazon.DynamoDBv2.Model;
+using FinancialControl.Domain.Events;
 
 namespace FinancialControl.Domain.Transaction
 {

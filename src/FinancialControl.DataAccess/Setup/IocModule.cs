@@ -13,7 +13,6 @@ namespace ProductCatalogue.Persistence.Setup
     {
         public static IServiceCollection AddPersistenceServices(this IServiceCollection serviceCollection)
         {
-            serviceCollection.AddTransient<IProductsRepository, ProductsRepository>();
 			serviceCollection.AddTransient<IRepository<ConsolidatedReport>, Repository<ConsolidatedReport>>();
 
 			return serviceCollection;

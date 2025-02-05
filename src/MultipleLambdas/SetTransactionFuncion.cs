@@ -1,12 +1,9 @@
-﻿using Amazon.Lambda.APIGatewayEvents;
-using Amazon.Lambda.Core;
+﻿using Amazon.Lambda.Core;
 using Amazon.Lambda.SQSEvents;
 using Ardalis.GuardClauses;
 using FinancialControl.Application.Commands;
 using FinancialControl.Domain.Helper;
-using FinancialControl.Domain.Queue;
 using Newtonsoft.Json;
-using ProductCatalogue.Application.Commands;
 using System;
 using System.Collections.Generic;
 using System.Linq;

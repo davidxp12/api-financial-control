@@ -1,16 +1,8 @@
 ﻿using Ardalis.GuardClauses;
 using AutoMapper;
-using FinancialControl.Application.Dtos;
-using FinancialControl.Domain.Consolidate;
 using FinancialControl.Domain.Transaction;
 using MediatR;
-using ProductCatalogue.Application.Commands;
-using ProductCatalogue.Domain.Products;
 using ProductCatalogue.Persistence.Setup;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 

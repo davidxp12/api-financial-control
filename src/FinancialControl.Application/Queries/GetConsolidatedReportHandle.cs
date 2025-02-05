@@ -3,14 +3,7 @@ using AutoMapper;
 using FinancialControl.Application.Dtos;
 using FinancialControl.Domain.Consolidate;
 using MediatR;
-using ProductCatalogue.Application.Dtos;
-using ProductCatalogue.Application.Queries;
-using ProductCatalogue.Persistence;
 using ProductCatalogue.Persistence.Setup;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 

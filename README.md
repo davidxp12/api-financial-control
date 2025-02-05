@@ -62,7 +62,6 @@ Registrar logs no Datadog para monitorar o tempo de processamento.
 
 ------------------------------------------------------------------------------------------------------------
 
-
 Monitoramento e Logs no Datadog
 
 Tempo de resposta e erros de consulta são monitorados via Datadog.
@@ -72,3 +71,24 @@ Se houver falha na consulta, um alerta é gerado.
 ✔️ Escalável: Como os dados consolidados são pré-calculados, a consulta no DynamoDB é rápida.
 ✔️ Baixa Latência: API Gateway + DynamoDB garantem alta performance.
 ✔️ Monitorado e Seguro: Logs e métricas no Datadog + regras de acesso via AWS WAF.
+------------------------------------------------------------------------------------------------------------
+📌 Como Implantar a Solução em homologação
+
+✔️ Compile o Código via prompt
+
+dotnet publish -c Release -o ./publish
+
+✔️ Empacote e Implante com SAM
+
+sam build
+sam deploy --guided
+
+✔️ Endpoint publicado com a url
+
+"https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/hml/"
+
+------------------------------------------------------------------------------------------------------------
+
+Para teste local 
+
+Configurar o projeto MultipleLambdas como set as startup project
