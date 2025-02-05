@@ -1,4 +1,5 @@
 ﻿using Amazon.DynamoDBv2.DataModel;
+using ProductCatalogue.Domain.BaseTypes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 namespace FinancialControl.Domain.Consolidate
 {
 	[DynamoDBTable("ConsolidatedReport")]
-	public class ConsolidatedReport
+	public class ConsolidatedReport : AggregateRoot
 	{
 		[DynamoDBHashKey(AttributeName = "Data")]
 		public string Data { get; set; }
@@ -17,6 +18,12 @@ namespace FinancialControl.Domain.Consolidate
 		[DynamoDBRangeKey(AttributeName = "TotalDebits")]
 		public decimal TotalDebits { get; set; }
 		[DynamoDBRangeKey(AttributeName = "FinalBalance")]
-		public decimal FinalBalance { get; set; }
+		public decimal FinalBalance {
+
+			get { 
+			
+				return TotalCredits - TotalDebits;
+			}
+		}
 	}
 }

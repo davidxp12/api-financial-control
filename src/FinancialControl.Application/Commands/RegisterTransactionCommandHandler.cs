@@ -36,7 +36,8 @@ namespace FinancialControl.Application.Commands
 			if (transaction.Amount > 0)
 			{
 				_transactionRepository.Save(transaction);
-				transaction.SendConsolidation(); // send to SQS queue
+
+				transaction.SendConsolidation(); // send to SQS queue to consolidate the transaction
 
 				_unitOfWork.Commit(transaction);
 			}

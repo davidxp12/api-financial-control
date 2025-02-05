@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FinancialControl.Domain.Products.Events;
+using Amazon.DynamoDBv2.Model;
 
 namespace FinancialControl.Domain.Transaction
 {

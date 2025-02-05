@@ -80,7 +80,7 @@ namespace ProductCatalogue.Persistence
 				foreach (var item in result.Items)
 					foreach (string attr in item.Keys)
 					{
-						if (attr == "Id")
+						if (attr == typeof(TModelClass).GetCustomAttribute<DynamoDBHashKeyAttribute>().AttributeName)
 						{
 							if (!string.IsNullOrEmpty(item[attr].N) && !_resultItems.Contains(item[attr].N))
 								_resultItems.Add(item[attr].N);
