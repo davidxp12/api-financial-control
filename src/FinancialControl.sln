@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.35706.149
+# Visual Studio Version 17
+VisualStudioVersion = 17.12.35707.178 d17.12
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{740DB792-9A38-4C8E-B1B7-42D8ED1F6F85}"
 EndProject
@@ -31,6 +31,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FinancialControl.Domain", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProductCatalogue.Persistence", "FinancialControl.DataAccess\ProductCatalogue.Persistence.csproj", "{D06D9985-6597-4673-A082-CB4E7A14CE60}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FinancialControl.Test", "FinancialControl.Test\FinancialControl.Test.csproj", "{134DF5F5-4519-4652-B963-54315AB0DCBF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -57,6 +59,10 @@ Global
 		{D06D9985-6597-4673-A082-CB4E7A14CE60}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D06D9985-6597-4673-A082-CB4E7A14CE60}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D06D9985-6597-4673-A082-CB4E7A14CE60}.Release|Any CPU.Build.0 = Release|Any CPU
+		{134DF5F5-4519-4652-B963-54315AB0DCBF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{134DF5F5-4519-4652-B963-54315AB0DCBF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{134DF5F5-4519-4652-B963-54315AB0DCBF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{134DF5F5-4519-4652-B963-54315AB0DCBF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -68,6 +74,7 @@ Global
 		{A27A424F-979F-4917-BA27-74C0BDDA3C81} = {23DC02B6-5DDE-488A-A5D0-A2F62A9AB65F}
 		{26A91F82-6A76-4E27-81CE-C3B1B6FDE68D} = {C2ABCD81-6F60-4203-ADEA-221E88A8068C}
 		{D06D9985-6597-4673-A082-CB4E7A14CE60} = {740DB792-9A38-4C8E-B1B7-42D8ED1F6F85}
+		{134DF5F5-4519-4652-B963-54315AB0DCBF} = {365733DF-286C-4241-8767-DCF412478541}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {98DFCD58-DF6C-42DD-960D-CBF834910E86}
