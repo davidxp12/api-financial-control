@@ -9,22 +9,14 @@ java -Djava.library.path=./DynamoDBLocal_lib -jar DynamoDBLocal.jar -sharedDb
 
 -- Create table 
 
-				---- ReportAd ----
-aws dynamodb create-table --cli-input-json file://create_table_reportad.json --endpoint-url http://localhost:8000
-
-				---- Consent ----
-
-aws dynamodb create-table --cli-input-json file://create_table_consent.json --endpoint-url http://localhost:8000
-
-aws dynamodb create-table --cli-input-json file://create_table_consentRevoke.json --endpoint-url http://localhost:8000
-
-aws dynamodb create-table --cli-input-json file://create_table_consentType.json --endpoint-url http://localhost:8000
+aws dynamodb create-table --cli-input-json file://create_table_ConsolidatedReport.json --endpoint-url http://localhost:8000
+aws dynamodb create-table --cli-input-json file://create_table_Transaction.json --endpoint-url http://localhost:8000
 
 
 
 -- Delete table
 
-aws dynamodb delete-table --table-name devReportAd --endpoint-url http://localhost:8000
+aws dynamodb delete-table --table-name devTransaction --endpoint-url http://localhost:8000
 
 -- List tables 
 
@@ -33,12 +25,6 @@ aws dynamodb list-tables --endpoint-url http://localhost:8000
 
 -- Show content of table
 
-aws dynamodb scan --table-name devReportAd --endpoint-url http://localhost:8000
-
-aws dynamodb scan --table-name devConsent --endpoint-url http://localhost:8000
-
-aws dynamodb scan --table-name devConsentRevoke --endpoint-url http://localhost:8000
-
-aws dynamodb scan --table-name devConsentType --endpoint-url http://localhost:8000
+aws dynamodb scan --table-name devTransaction --endpoint-url http://localhost:8000
 
 

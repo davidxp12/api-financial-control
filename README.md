@@ -1,5 +1,19 @@
 # api-financial-control
 
+
+------------------------------------------------------------------------------------------------------------
+
+## Arquitetura da Aplicação
+![Diagrama da Arquitetura](Documentos/architecture.png)
+
+
+## Solution Review
+📌 [Visualizar em PDF](Documentos/documentation.pdf)
+
+------------------------------------------------------------------------------------------------------------
+
+## Detalhes dos serveless lambda:
+
 ------------------------------------------------------------------------------------------------------------
 Lambda de relatório consolidado por data (lambda-consolidated-report) - consolidated-report/{date}
 📌 Responsabilidade: Fornecer o saldo consolidado de um determinado dia.
@@ -72,23 +86,96 @@ Se houver falha na consulta, um alerta é gerado.
 ✔️ Baixa Latência: API Gateway + DynamoDB garantem alta performance.
 ✔️ Monitorado e Seguro: Logs e métricas no Datadog + regras de acesso via AWS WAF.
 ------------------------------------------------------------------------------------------------------------
-📌 Como Implantar a Solução em homologação
+📌 Como Implantar a Solução nos ambientes (dev,hml e prd)
 
-✔️ Compile o Código via prompt
+✅ 1. Pré-requisitos
+Antes de executar o template, certifique-se de ter:
 
-dotnet publish -c Release -o ./publish
+AWS CLI instalado e configurado (aws configure)
+AWS SAM CLI instalado (sam --version)
+Docker (necessário para testes locais)
 
-✔️ Empacote e Implante com SAM
+sh
+brew install aws/tap/aws-sam-cli   # macOS
+choco install aws-sam-cli          # Windows
 
+via pip Linux
+pip install aws-sam-cli
+
+✅ 2. Compilar e Construir a Aplicação
 sam build
+
+✅ 3. Testar a Aplicação Localmente (Opcional)
+sam local start-api
+
+Isso simula o API Gateway chamando os Lambdas. Agora, teste enviando uma requisição:
+
+curl -X POST http://127.0.0.1:3000/api/transactions -H "Content-Type: application/json" -d '{"transactionId": "123", "amount": 100.00, "type": "credit"}'
+
+Se estiver testando um Lambda que processa SQS, você pode simular uma invocação:
+
+Criar um arquivo event.json com um exemplo de mensagem SQS:
+{
+  "Records": [
+    {
+      "messageId": "1",
+      "body": "{\"transactionId\": \"123\", \"amount\": 100.00, \"type\": \"credit\"}"
+    }
+  ]
+}
+
+✅ 4. Implantar a Aplicação na AWS
+
+4.1 Fazer o Deploy pela Primeira Vez
 sam deploy --guided
+ou
+sam deploy --parameter-overrides Environment=dev
 
-✔️ Endpoint publicado com a url
+Esse comando solicita configurações interativas, incluindo:
 
-"https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/hml/"
+Nome do Stack (Ex: financial-control-app)
+Região da AWS (Ex: us-east-1)
+Ambiente (Ex: dev, hml, prd)
+Criar ou usar um bucket S3 para armazenar artefatos do deployment
+
+4.2 Deploys Futuros
+sam deploy
+
+
+✅ 5. Verificar os Recursos Criados
+aws cloudformation describe-stacks --stack-name financial-control-app
+
+✅ 6. Testar a API Implantada
+
+Agora que a aplicação está na AWS, envie uma requisição:
+
+curl -X POST https://your-api-gateway-url.amazonaws.com/dev/api/transactions -H "Content-Type: application/json" -d '{"transactionId": "123", "amount": 100.00, "type": "credit"}'
+
+Se for um Lambda com trigger do SQS, envie uma mensagem para a fila:
+aws sqs send-message --queue-url https://sqs.us-east-1.amazonaws.com/123456789012/sqs-transactions-dev --message-body '{"transactionId": "123", "amount": 100.00, "type": "credit"}'
+
+E veja os logs da execução no CloudWatch:
+aws logs describe-log-groups
+aws logs tail /aws/lambda/SetTransactionFunction
+
 
 ------------------------------------------------------------------------------------------------------------
 
-Para teste local 
+## Para teste local no visual studio
 
-Configurar o projeto MultipleLambdas como set as startup project
+✔️ Configurar o projeto MultipleLambdas como set as startup project
+
+✔️ Configurando o dynamodb local
+no root do repositório existe a pasta dynamodb_local
+
+abrir a pasta com o cmd e executar os seguintes comandos:
+
+--- inicia o dynamodb local
+java -Djava.library.path=./DynamoDBLocal_lib -jar DynamoDBLocal.jar -sharedDb
+
+abrir outro cmd e execuar os comando abaixos para criar as tabelas:
+
+aws dynamodb create-table --cli-input-json file://create_table_ConsolidatedReport.json --endpoint-url http://localhost:8000
+aws dynamodb create-table --cli-input-json file://create_table_Transaction.json --endpoint-url http://localhost:8000
+
+

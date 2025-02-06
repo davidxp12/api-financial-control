@@ -1,5 +1,5 @@
 {
-    "TableName": "devConsolidatedReport",
+    "TableName": "hmlConsolidatedReport",
 	 "KeySchema": [
       { "AttributeName": "Data", "KeyType": "HASH" }
     ],

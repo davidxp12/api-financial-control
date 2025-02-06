@@ -1,38 +1,33 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
   "Transform": "AWS::Serverless-2016-10-31",
-  "Description": "An AWS Serverless Application.",
+  "Description": "Finacial control AWS Serverless Application with multiple environments.",
+  "Parameters": {
+    "Environment": {
+      "Type": "String",
+      "Default": "hml",
+      "AllowedValues": ["dev", "hml", "prd"]
+    }
+  },
   "Resources": {
-   "MyApiGateway": {
+    "MyApiGateway": {
       "Type": "AWS::Serverless::Api",
       "Properties": {
         "Name": "MyApiGateway",
-        "StageName": "hml",
+        "StageName": { "Ref": "Environment" },
         "Cors": {
           "AllowMethods": "'GET,POST,OPTIONS'",
           "AllowHeaders": "'Content-Type'",
           "AllowOrigin": "'*'"
         },
-        "GatewayResponses": {
-          "DEFAULT_4XX": {
-            "ResponseParameters": {
-              "gatewayresponse.header.Access-Control-Allow-Origin": "'*'"
-            }
-          },
-          "DEFAULT_5XX": {
-            "ResponseParameters": {
-              "gatewayresponse.header.Access-Control-Allow-Origin": "'*'"
-            }
-          }
-        },
         "DefinitionBody": {
           "swagger": "2.0",
           "info": { "title": "API Gateway Financial Control", "version": "1.0" },
           "paths": {
-            "/api/transactions/*": {
+            "/api/transactions": {
               "post": {
                 "x-amazon-apigateway-integration": {
-                  "type": "aws",
+                  "type": "aws_proxy",
                   "httpMethod": "POST",
                   "uri": {
                     "Fn::Sub": "arn:aws:apigateway:${AWS::Region}:sqs:path/${AWS::AccountId}/${SqsQueueTransaction.QueueName}"
@@ -55,93 +50,99 @@
                 }
               }
             }
-          }
+          },
+          "/api/consolidated-report/{date}": {
+              "get": {
+                "x-amazon-apigateway-integration": {
+                  "type": "aws_proxy",
+                  "httpMethod": "GET",
+                  "uri": {
+                    "Fn::Sub": "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${GetConsolidatedReportFunction.Arn}/invocations"
+                  },
+                  "credentials": {
+                    "Fn::GetAtt": ["ApiGatewayRole", "Arn"]
+                  },
+                  "passthroughBehavior": "when_no_match"
+                }
+              }
+            }
         }
       }
     },
-     "ApiGatewayRole": {
-      "Type": "AWS::IAM::Role",
+    "SqsQueueTransaction": {
+      "Type": "AWS::SQS::Queue",
       "Properties": {
-        "AssumeRolePolicyDocument": {
-          "Version": "2012-10-17",
-          "Statement": [
-            {
-              "Effect": "Allow",
-              "Principal": { "Service": "apigateway.amazonaws.com" },
-              "Action": "sts:AssumeRole"
-            }
-          ]
-        },
-        "Policies": [
-          {
-            "PolicyName": "ApiGatewaySQSPolicy",
-            "PolicyDocument": {
-              "Version": "2012-10-17",
-              "Statement": [
-                {
-                  "Effect": "Allow",
-                  "Action": "sqs:SendMessage",
-                  "Resource": { "Fn::GetAtt": ["SqsQueueTransaction", "Arn"] }
-                }
-              ]
-            }
-          }
+        "QueueName": { "Fn::Sub": "sqs-transactions-${Environment}" },
+        "VisibilityTimeout": 30,
+        "RedrivePolicy": {
+          "deadLetterTargetArn": { "Fn::GetAtt": ["SqsQueueTransactionDeadLetterQueue", "Arn"] },
+          "maxReceiveCount": 30
+        }
+      }
+    },
+    "SqsQueueTransactionDeadLetterQueue": {
+      "Type": "AWS::SQS::Queue",
+      "Properties": {
+        "QueueName": { "Fn::Sub": "sqs-transactions-${Environment}-dlq" }
+      }
+    },
+    "SqsQueueConsolidation": {
+      "Type": "AWS::SQS::Queue",
+      "Properties": {
+        "QueueName": { "Fn::Sub": "sqs-consolidation-${Environment}" },
+        "VisibilityTimeout": 30,
+        "RedrivePolicy": {
+          "deadLetterTargetArn": { "Fn::GetAtt": ["SqsQueueConsolidationDeadLetterQueue", "Arn"] },
+          "maxReceiveCount": 30
+        }
+      }
+    },
+    "SqsQueueConsolidationDeadLetterQueue": {
+      "Type": "AWS::SQS::Queue",
+      "Properties": {
+        "QueueName": { "Fn::Sub": "sqs-consolidation-${Environment}-dlq" }
+      }
+    },
+    "TransactionsTable": {
+      "Type": "AWS::DynamoDB::Table",
+      "Properties": {
+        "TableName": { "Fn::Sub": "${Environment}Transaction" },
+        "BillingMode": "PAY_PER_REQUEST",
+        "AttributeDefinitions": [
+          { "AttributeName": "TransactionId", "AttributeType": "S" },
+          { "AttributeName": "Date", "AttributeType": "S" }
+        ],
+        "KeySchema": [
+          { "AttributeName": "TransactionId", "KeyType": "HASH" },
+          { "AttributeName": "Date", "KeyType": "RANGE" }
         ]
       }
     },
-    "GetConsolidatedReportFunction": {
-      "Type": "AWS::Serverless::Function",
+    "ConsolidatedReportsTable": {
+      "Type": "AWS::DynamoDB::Table",
       "Properties": {
-        "Handler": "MultipleLambdas::MultipleLambdas.GetConsolidatedReportFunction::FunctionHandler",
-        "Description": "GetConsolidatedReport function",
-        "Runtime": "dotnet9",
-        "CodeUri": "./",
-        "MemorySize": 256,
-        "Timeout": 30,
-        "Role": {
-                 "Fn::Sub": "arn:aws:iam::${AWS::AccountId}:role/LambdaExecutionRole"
-            },
-        "Environment": {
-          "Variables": {
-            "ASPNETCORE_ENVIRONMENT": "hml"
-            }
-         },
-        "Policies": [
-          "AWSLambdaBasicExecutionRole"
+        "TableName": { "Fn::Sub": "${Environment}ConsolidatedReport" },
+        "BillingMode": "PAY_PER_REQUEST",
+        "AttributeDefinitions": [
+          { "AttributeName": "Date", "AttributeType": "S" }
         ],
-        "Events": {
-          "RootGet": {
-            "Type": "Api",
-            "Properties": {
-              "Path": "/api/consolidated-report/{date}",
-              "Method": "POST"
-            }
-          }
-        }
+        "KeySchema": [
+          { "AttributeName": "Date", "KeyType": "HASH" }
+        ]
       }
     },
-    "SetTransactionFuncion" : {
-      "Type" : "AWS::Serverless::Function",
+    "SetTransactionFunction": {
+      "Type": "AWS::Serverless::Function",
       "Properties": {
-        "Handler": "MultipleLambdas::MultipleLambdas.SetTransactionFuncion::FunctionHandler",
+        "Handler": "MultipleLambdas::MultipleLambdas.SetTransactionFunction::FunctionHandler",
         "Runtime": "dotnet9",
         "CodeUri": "./",
-        "Description": "SetTransaction function",
         "MemorySize": 256,
         "Timeout": 30,
         "Role": {
-                 "Fn::Sub": "arn:aws:iam::${AWS::AccountId}:role/LambdaExecutionRole"
-         },
-         "Environment": {
-          "Variables": {
-            "ASPNETCORE_ENVIRONMENT": "hml",
-            "SQS_QUEUE_URL": {
-              "Ref": "SqsQueueTransaction"
-                }
-            }
-         },
-        "Policies": [ "AWSLambda_FullAccess" ],
-         "Events": {
+          "Fn::Sub": "arn:aws:iam::${AWS::AccountId}:role/LambdaExecutionRole"
+        },
+        "Events": {
           "SqsTrigger": {
             "Type": "SQS",
             "Properties": {
@@ -152,24 +153,17 @@
         }
       }
     },
-    "SetConsolidatedReportFunction" : {
-      "Type" : "AWS::Serverless::Function",
+    "SetConsolidatedReportFunction": {
+      "Type": "AWS::Serverless::Function",
       "Properties": {
         "Handler": "MultipleLambdas::MultipleLambdas.SetConsolidatedReportFunction::FunctionHandler",
         "Runtime": "dotnet9",
         "CodeUri": "./",
-        "Description": "SetConsolidatedReport function",
         "MemorySize": 256,
         "Timeout": 30,
         "Role": {
-            "Fn::Sub": "arn:aws:iam::${AWS::AccountId}:role/LambdaExecutionRole"
-         },
-         "Environment": {
-          "Variables": {
-            "ASPNETCORE_ENVIRONMENT": "hml"
-            }
-         },
-        "Policies": [ "AWSLambda_FullAccess" ],
+          "Fn::Sub": "arn:aws:iam::${AWS::AccountId}:role/LambdaExecutionRole"
+        },
         "Events": {
           "SqsTrigger": {
             "Type": "SQS",
@@ -181,55 +175,34 @@
         }
       }
     },
-    "SqsQueueTransaction": {
-      "Type": "AWS::SQS::Queue",
+    "GetConsolidatedReportFunction": {
+      "Type": "AWS::Serverless::Function",
       "Properties": {
-        "QueueName": "sqs-transactions-hml",
-        "VisibilityTimeout": 30,
-        "RedrivePolicy": {
-          "deadLetterTargetArn": { "Fn::GetAtt": ["SqsQueueTransactionDeadLetterQueue", "Arn"] },
-          "maxReceiveCount": 10
+        "Handler": "MultipleLambdas::MultipleLambdas.GetConsolidatedReportFunction::FunctionHandler",
+        "Runtime": "dotnet9",
+        "CodeUri": "./",
+        "MemorySize": 256,
+        "Timeout": 30,
+        "Role": {
+          "Fn::Sub": "arn:aws:iam::${AWS::AccountId}:role/LambdaExecutionRole"
         }
-      }
-    },
-    "SqsQueueTransactionDeadLetterQueue": {
-      "Type": "AWS::SQS::Queue",
-      "Properties": {
-        "QueueName": "sqs-transactions-hml-dlq"
-      }
-    },
-     "SqsQueueConsolidation": {
-      "Type": "AWS::SQS::Queue",
-      "Properties": {
-        "QueueName": "sqs-consolidation-hml",
-        "VisibilityTimeout": 30,
-        "RedrivePolicy": {
-          "deadLetterTargetArn": { "Fn::GetAtt": ["SqsQueueConsolidationDeadLetterQueue", "Arn"] },
-          "maxReceiveCount": 10
-        }
-      }
-    },
-    "SqsQueueConsolidationDeadLetterQueue": {
-      "Type": "AWS::SQS::Queue",
-      "Properties": {
-        "QueueName": "sqs-consolidation-hml-dlq"
       }
     }
   },
   "Outputs": {
     "ApiURL": {
-      "Description": "API endpoint URL for hml environment",
+      "Description": "API endpoint URL for the environment",
       "Value": {
-        "Fn::Sub": "https://${MyApiGateway}.execute-api.${AWS::Region}.amazonaws.com/hml/"
+        "Fn::Sub": "https://${MyApiGateway}.execute-api.${AWS::Region}.amazonaws.com/api/transactions/${Environment}/"
       }
     },
     "SQSQueueTransactionURL": {
-      "Description": "Transaction URL Queue SQS",
+      "Description": "Transaction Queue URL",
       "Value": { "Ref": "SqsQueueTransaction" }
     },
-     "SQSQueueConsolidationURL": {
-      "Description": "Consolidation URL Queue SQS",
-      "Value": { "Ref": "SqsQueueConsolidation" }
+    "DynamoDBTransactionsTable": {
+      "Description": "Transactions Table",
+      "Value": { "Ref": "TransactionsTable" }
     }
   }
 }

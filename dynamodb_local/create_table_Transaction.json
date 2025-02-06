@@ -1,5 +1,5 @@
 {
-    "TableName": "devTransaction",
+    "TableName": "hmlTransaction",
 	 "KeySchema": [
       { "AttributeName": "TransactionId", "KeyType": "HASH" },
       { "AttributeName": "Amount", "KeyType": "RANGE" }
