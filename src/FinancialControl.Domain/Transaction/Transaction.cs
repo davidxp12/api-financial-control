@@ -21,8 +21,8 @@ namespace FinancialControl.Domain.Transaction
 		[DynamoDBHashKey(AttributeName = "TransactionId")]
 		public long TransactionId { get; set; }
 
-		[DynamoDBGlobalSecondaryIndexHashKey(AttributeName = "Data")]
-		public string Data { get; set; } // patter yyyy-mm-dd
+		[DynamoDBGlobalSecondaryIndexHashKey(AttributeName = "Date")]
+		public string Date { get; set; } // patter yyyy-mm-dd
 		[DynamoDBRangeKey(AttributeName = "Amount")]
 		public decimal Amount { get; set; }
 

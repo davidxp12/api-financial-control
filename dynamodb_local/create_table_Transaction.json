@@ -32,20 +32,20 @@
     },
 	"GlobalSecondaryIndexes": [
         {
-          "IndexName": "index_data",
+          "IndexName": "index_date",
           "KeySchema": [
             {
               "AttributeName": "TransactionId",
               "KeyType": "HASH"
             },
             {
-              "AttributeName": "Data",
+              "AttributeName": "Date",
               "KeyType": "RANGE"
             }
           ],
           "Projection": {
             "NonKeyAttributes": [
-              "Data"
+              "Date"
             ],
             "ProjectionType": "INCLUDE"
           },

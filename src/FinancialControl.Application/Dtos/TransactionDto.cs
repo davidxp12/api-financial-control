@@ -12,7 +12,7 @@ namespace FinancialControl.Application.Dtos
 	{
 		public long TransactionId { get; set; }
 
-		public string Data { get; set; }
+		public string Date { get; set; }
 		public decimal Amount { get; set; }
 
 		public EnumTypeTransaction Type { get; set; }

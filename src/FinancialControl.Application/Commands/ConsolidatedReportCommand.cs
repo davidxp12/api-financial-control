@@ -11,7 +11,7 @@ namespace FinancialControl.Application.Commands
 	public class ConsolidatedReportCommand : IRequest<bool>
 	{
 		public Guid TransactionId { get; set; }
-		public string Data { get; set; }
+		public string Date { get; set; }
 		public decimal Amount { get; set; }
 		public EnumTypeTransaction Type { get; set; }
 		public string Category { get; set; }

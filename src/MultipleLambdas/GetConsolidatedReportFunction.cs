@@ -3,6 +3,7 @@ using Amazon.Lambda.Core;
 using Ardalis.GuardClauses;
 using FinancialControl.Application.Dtos;
 using FinancialControl.Application.Queries;
+using FinancialControl.Domain.Helper;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -23,21 +24,23 @@ namespace MultipleLambdas
 
 		public async Task<APIGatewayProxyResponse> FunctionHandler(APIGatewayProxyRequest request, ILambdaContext context)
 		{
+			context.SetEnvironment();
 			this.Logger.SetLoggerContext(context.Logger);
 			this.Logger.LogInfo($"Fetching consolidatedReport by date");
+
 
 			try
 			{
 				Guard.Against.Null(request, nameof(request));
 				var queryParams = request.QueryStringParameters ?? new Dictionary<string, string>();
-				DateTime data = DateTime.MinValue;
+				DateTime date = DateTime.MinValue;
 
 				if (queryParams.ContainsKey("date"))
-					DateTime.TryParse(queryParams["date"], out data);
+					DateTime.TryParse(queryParams["date"], out date);
 
-				this.Logger.LogInfo($"Fetching consolidatedReport by date in query: date: {data}");
+				this.Logger.LogInfo($"Fetching consolidatedReport by date in query: date: {date}");
 
-				var queryResult = await this.Mediator.Send(new GetConsolidatedReportQuery(data));
+				var queryResult = await this.Mediator.Send(new GetConsolidatedReportQuery(date));
 
 				// return result
 				return new APIGatewayProxyResponse

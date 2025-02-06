@@ -19,20 +19,20 @@ namespace FinancialControl.Application.Queries
 			_transactionRepository = transactionRepository;
 		}
 
-		public List<Transaction> SearchBySecondaryIndexByData(string data)
+		public List<Transaction> SearchBySecondaryIndexByDate(string date)
 		{
 			List<Transaction> results = new List<Transaction>();
 
-			if (!string.IsNullOrEmpty(data))
+			if (!string.IsNullOrEmpty(date))
 			{
 				Dictionary<string, AttributeValue> _expressionAttributeValues = new Dictionary<string, AttributeValue>();
 
-				_expressionAttributeValues.Add(":v_data", new AttributeValue
+				_expressionAttributeValues.Add(":v_date", new AttributeValue
 				{
-					S = data
+					S = date
 				});
 
-				IList<string> _listIdKey = _transactionRepository.GetIdByIndex<Transaction>("index_data", "Data = :v_data", _expressionAttributeValues);
+				IList<string> _listIdKey = _transactionRepository.GetIdByIndex<Transaction>("index_date", "Date = :v_date", _expressionAttributeValues);
 
 				if (_listIdKey != null)
 				{

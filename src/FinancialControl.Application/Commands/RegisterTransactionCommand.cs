@@ -11,17 +11,17 @@ namespace FinancialControl.Application.Commands
 {
 	public class RegisterTransactionCommand : IRequest<bool>
 	{
-		public RegisterTransactionCommand(DateTime data, decimal amount, string category)
+		public RegisterTransactionCommand(DateTime Date, decimal amount, string category)
 		{
 			this.TransactionId = Guid.NewGuid();
-			this.Data = data.ToString("yyyy-MM-dd");
+			this.Date = Date.ToString("yyyy-MM-dd");
 			this.Amount = Amount;
 			this.Category = category;
 			this.Type = amount > 0 ? EnumTypeTransaction.Credit : EnumTypeTransaction.Debit;
 		}
 
 		public Guid TransactionId { get; set; }
-		public string Data { get; set; }
+		public string Date { get; set; }
 		public decimal Amount { get; set; }
 		public EnumTypeTransaction Type { get; set; }
 		public string Category { get; set; }

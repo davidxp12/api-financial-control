@@ -14,7 +14,9 @@ namespace FinancialControl.Domain.Events
 		public Transaction.Transaction Transaction { get; }
 		public RegisterConsolidationEvent(Transaction.Transaction transaction)
 		{
-			new SQSManager().Send(transaction.ToJson(), ConfigurationManager.AppSettings[$"appsettings:sqs:urlConsolidation"]);
+			var SQSManager = new SQSManager();
+
+			SQSManager.Send(transaction.ToJson(), SQSManager.GetQueueUrlAsync(ConfigurationManager.AppSettings[$"appsettings:sqs:QueueConsolidated"]).Result);
 		}
 	}
 }

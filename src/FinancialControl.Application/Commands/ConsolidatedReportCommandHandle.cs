@@ -44,12 +44,12 @@ namespace FinancialControl.Application.Commands
 
 			var consolidatedReport = this._mapper.Map<ConsolidatedReport>(cmd);
 
-			if (consolidatedReport != null && !string.IsNullOrEmpty(consolidatedReport.Data))
+			if (consolidatedReport != null && !string.IsNullOrEmpty(consolidatedReport.Date))
 			{
 				consolidatedReport.TotalDebits = 0;
 				consolidatedReport.TotalCredits = 0;
 
-				var TransactionList = GetTransactionQuery().SearchBySecondaryIndexByData(consolidatedReport.Data);
+				var TransactionList = GetTransactionQuery().SearchBySecondaryIndexByDate(consolidatedReport.Date);
 
 				if (TransactionList.Count > 0)
 				{

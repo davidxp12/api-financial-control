@@ -11,8 +11,8 @@ namespace FinancialControl.Domain.Consolidate
 	[DynamoDBTable("ConsolidatedReport")]
 	public class ConsolidatedReport : AggregateRoot
 	{
-		[DynamoDBHashKey(AttributeName = "Data")]
-		public string Data { get; set; }
+		[DynamoDBHashKey(AttributeName = "Date")]
+		public string Date { get; set; }
 		[DynamoDBRangeKey(AttributeName = "TotalCredits")]
 		public decimal TotalCredits { get; set; }
 		[DynamoDBRangeKey(AttributeName = "TotalDebits")]

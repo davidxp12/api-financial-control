@@ -150,6 +150,14 @@
               "BatchSize": 20
             }
           }
+        },
+        "Environment": {
+          "Variables": {
+            "ASPNETCORE_ENVIRONMENT": { "Ref": "Environment" },
+            "DYNAMODB_TABLE": { "Fn::Sub": "${Environment}Transaction" },
+            "QueueTransaction": { "Ref": "SqsQueueTransaction" },
+            "QueueConsolidated": { "Ref": "SqsQueueConsolidation" }
+          }
         }
       }
     },
@@ -172,6 +180,14 @@
               "BatchSize": 20
             }
           }
+        },
+        "Environment": {
+          "Variables": {
+            "ASPNETCORE_ENVIRONMENT": { "Ref": "Environment" },
+            "DYNAMODB_TABLE": { "Fn::Sub": "${Environment}Transaction" },
+            "QueueTransaction": { "Ref": "SqsQueueTransaction" },
+            "QueueConsolidated": { "Ref": "SqsQueueConsolidation" }
+          }
         }
       }
     },
@@ -185,6 +201,14 @@
         "Timeout": 30,
         "Role": {
           "Fn::Sub": "arn:aws:iam::${AWS::AccountId}:role/LambdaExecutionRole"
+        },
+        "Environment": {
+          "Variables": {
+            "ASPNETCORE_ENVIRONMENT": { "Ref": "Environment" },
+            "DYNAMODB_TABLE": { "Fn::Sub": "${Environment}Transaction" },
+            "QueueTransaction": { "Ref": "SqsQueueTransaction" },
+            "QueueConsolidated": { "Ref": "SqsQueueConsolidation" }
+          }
         }
       }
     }

@@ -1,11 +1,11 @@
 {
     "TableName": "hmlConsolidatedReport",
 	 "KeySchema": [
-      { "AttributeName": "Data", "KeyType": "HASH" }
+      { "AttributeName": "Date", "KeyType": "HASH" }
     ],
     "AttributeDefinitions": [
 		{
-          "AttributeName": "Data",
+          "AttributeName": "Date",
           "AttributeType": "S"
         },
         {

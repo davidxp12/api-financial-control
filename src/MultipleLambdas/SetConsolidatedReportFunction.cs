@@ -23,6 +23,7 @@ namespace MultipleLambdas
 
 		public async void FunctionHandler(SQSEvent sqsEvent, ILambdaContext context)
 		{
+			context.SetEnvironment();
 			this.Logger.SetLoggerContext(context.Logger);
 			this.Logger.LogInfo($"FunctionHandler SetConsolidatedReportFunction begin");
 
