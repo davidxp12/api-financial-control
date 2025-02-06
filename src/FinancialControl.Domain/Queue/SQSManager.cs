@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace FinancialControl.Domain.Queue
 {
-	public class SQSManager : IQueueSender
+	public class SQSManager : ISQSManager
 	{
 		public static AmazonSQSClient clientSQS { get; private set; }
 		public int retry { get; set; }

@@ -1,23 +1,11 @@
 {
-    "TableName": "hmlConsolidatedReport",
+    "TableName": "DevConsolidatedReport",
 	 "KeySchema": [
       { "AttributeName": "Date", "KeyType": "HASH" }
     ],
     "AttributeDefinitions": [
 		{
           "AttributeName": "Date",
-          "AttributeType": "S"
-        },
-        {
-          "AttributeName": "TotalCredits",
-          "AttributeType": "S"
-        },
-        {
-          "AttributeName": "TotalDebits",
-          "AttributeType": "S"
-        },
-        {
-          "AttributeName": "FinalBalance",
           "AttributeType": "S"
         }
     ],

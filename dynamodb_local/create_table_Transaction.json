@@ -1,60 +1,30 @@
 {
-    "TableName": "hmlTransaction",
-	 "KeySchema": [
-      { "AttributeName": "TransactionId", "KeyType": "HASH" },
-      { "AttributeName": "Amount", "KeyType": "RANGE" }
+    "TableName": "devTransaction",
+    "KeySchema": [
+        { "AttributeName": "TransactionId", "KeyType": "HASH" },
+        { "AttributeName": "Date", "KeyType": "RANGE" }
     ],
     "AttributeDefinitions": [
-		{
-          "AttributeName": "TransactionId",
-          "AttributeType": "S"
-        },
-        {
-          "AttributeName": "Data",
-          "AttributeType": "S"
-        },
-        {
-          "AttributeName": "Type",
-          "AttributeType": "S"
-        },
-        {
-          "AttributeName": "Amount",
-          "AttributeType": "S"
-        },
-		{
-          "AttributeName": "Category",
-          "AttributeType": "S"
-        }
+        { "AttributeName": "TransactionId", "AttributeType": "S" },
+        { "AttributeName": "Date", "AttributeType": "S" }
     ],
     "ProvisionedThroughput": {
-      "ReadCapacityUnits": 5,
-      "WriteCapacityUnits": 5
+        "ReadCapacityUnits": 5,
+        "WriteCapacityUnits": 5
     },
-	"GlobalSecondaryIndexes": [
+    "GlobalSecondaryIndexes": [
         {
-          "IndexName": "index_date",
-          "KeySchema": [
-            {
-              "AttributeName": "TransactionId",
-              "KeyType": "HASH"
-            },
-            {
-              "AttributeName": "Date",
-              "KeyType": "RANGE"
-            }
-          ],
-          "Projection": {
-            "NonKeyAttributes": [
-              "Date"
+            "IndexName": "index_date",
+            "KeySchema": [
+                { "AttributeName": "Date", "KeyType": "HASH" }
             ],
-            "ProjectionType": "INCLUDE"
-          },
-          "ProvisionedThroughput": {
-            "ReadCapacityUnits": 5,
-            "WriteCapacityUnits": 5
-          }
+            "Projection": {
+                "ProjectionType": "ALL"
+            },
+            "ProvisionedThroughput": {
+                "ReadCapacityUnits": 5,
+                "WriteCapacityUnits": 5
+            }
         }
-        }
-      ]
+    ]
 }
-

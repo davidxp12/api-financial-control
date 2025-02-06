@@ -13,6 +13,7 @@ using MediatR;
 using MultipleLambdas;
 using LambdaLogger;
 using FinancialControl.Application.Queries;
+using FinancialControl.Domain.Helper;
 
 public class GetConsolidatedReportFunctionTests
 {
@@ -22,8 +23,10 @@ public class GetConsolidatedReportFunctionTests
 
 	public GetConsolidatedReportFunctionTests()
 	{
+		Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "dev");
 		_loggerMock = new Mock<ILogger>();
 		_mediatorMock = new Mock<IMediator>();
+		_function = new GetConsolidatedReportFunction();
 	}
 
 	[Fact]
@@ -34,7 +37,7 @@ public class GetConsolidatedReportFunctionTests
 		{
 			QueryStringParameters = new Dictionary<string, string> { { "date", "2024-06-01" } }
 		};
-		var context = new Mock<ILambdaContext>();
+		var context = LambdaHelper.LambdaTestBuildContext();
 
 		var expectedResponse = new ConsolidatedReport
 		{
@@ -43,12 +46,8 @@ public class GetConsolidatedReportFunctionTests
 			TotalDebits = 5230.25m,
 		};
 
-		//_mediatorMock
-		//	.Setup(m => m.Send(It.IsAny<GetConsolidatedReportQuery>(), default))
-		//	.ReturnsAsync(expectedResponse);
-
 		// Act
-		var response = await _function.FunctionHandler(request, context.Object);
+		var response = await _function.FunctionHandler(request, context);
 
 		// Assert
 		response.StatusCode.Should().Be((int)HttpStatusCode.OK);
@@ -67,14 +66,14 @@ public class GetConsolidatedReportFunctionTests
 		{
 			QueryStringParameters = new Dictionary<string, string> { { "date", "2024-06-01" } }
 		};
-		var context = new Mock<ILambdaContext>();
+		var context = LambdaHelper.LambdaTestBuildContext();
 
 		_mediatorMock
 			.Setup(m => m.Send(It.IsAny<GetConsolidatedReportQuery>(), default))
 			.ThrowsAsync(new Exception("Database connection failed"));
 
 		// Act
-		var response = await _function.FunctionHandler(request, context.Object);
+		var response = await _function.FunctionHandler(request, context);
 
 		// Assert
 		response.StatusCode.Should().Be((int)HttpStatusCode.InternalServerError);
@@ -88,9 +87,9 @@ public class GetConsolidatedReportFunctionTests
 		// Arrange
 		var request = new APIGatewayProxyRequest
 		{
-			QueryStringParameters = new Dictionary<string, string>() // Sem `date` nos parâmetros
+			QueryStringParameters = new Dictionary<string, string>() 
 		};
-		var context = new Mock<ILambdaContext>();
+		var context = LambdaHelper.LambdaTestBuildContext();
 
 		var expectedResponse = new ConsolidatedReport
 		{
@@ -99,12 +98,8 @@ public class GetConsolidatedReportFunctionTests
 			TotalDebits = 0
 		};
 
-		//_mediatorMock
-		//	.Setup(m => m.Send(It.IsAny<GetConsolidatedReportQuery>(), default))
-		//	.ReturnsAsync(expectedResponse);
-
 		// Act
-		var response = await _function.FunctionHandler(request, context.Object);
+		var response = await _function.FunctionHandler(request, context);
 
 		// Assert
 		response.StatusCode.Should().Be((int)HttpStatusCode.OK);
@@ -119,10 +114,10 @@ public class GetConsolidatedReportFunctionTests
 	public async Task FunctionHandler_ShouldReturnInternalServerError_WhenRequestIsNull()
 	{
 		// Arrange
-		var context = new Mock<ILambdaContext>();
+		 var context = LambdaHelper.LambdaTestBuildContext();
 
 		// Act
-		var response = await _function.FunctionHandler(null, context.Object);
+		var response = await _function.FunctionHandler(null, context);
 
 		// Assert
 		response.StatusCode.Should().Be((int)HttpStatusCode.InternalServerError);

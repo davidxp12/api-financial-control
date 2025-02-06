@@ -55,7 +55,7 @@ namespace ProductCatalogue.Persistence.Setup
 
 			serviceCollection.AddSingleton<IAmazonSQS, AmazonSQSClient>();
 
-			return serviceCollection;
+			return serviceCollection; 
 		}
 	}
 }

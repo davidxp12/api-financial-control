@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using FinancialControl.Application.Commands;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using ProductCatalogue.Domain.Repositories;
@@ -16,11 +17,8 @@ namespace ProductCatalogue.Application.Setup
 
         private static void ConfigureServices(IServiceCollection services)
         {
-            // TODO: Will autofac work instead?
-
-            // add mediatr types from this assembly
             services.AddMediatR(Assembly.GetExecutingAssembly())
-                .AddAutoMapper(Assembly.GetExecutingAssembly())
+				.AddAutoMapper(Assembly.GetExecutingAssembly())
                 .AddPersistenceServices()
                 .AddAwsServices();
 
